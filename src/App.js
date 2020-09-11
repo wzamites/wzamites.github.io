@@ -2,25 +2,32 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {repos: []}
+
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('https://api.github.com/users/wzamites/repos')
+    .then(response => response.json())
+    .then(data => this.setState({repos: data}))
+  }
+
+  render() {
+    const repoNames = this.state.repos.map(repo => <li>{repo.name}</li>)
+    return (
+      <div className="App">
+        <header className="App-header">
+          <ul>
+            {repoNames}
+          </ul>
+        </header>
+      </div>
+    );
+  }
 }
 
 export default App;
