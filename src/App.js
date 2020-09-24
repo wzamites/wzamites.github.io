@@ -1,29 +1,56 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {repos: []}
+    this.state = {
+      people: [],
+      page: 1,
+      search: ''
+    }
 
-    this.componentDidMount = this.componentDidMount.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.callApi = this.callApi.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
-    fetch('https://api.github.com/users/wzamites/repos')
+    this.callApi(this.state.page)
+  }
+
+  handleClick() {
+    this.callApi(this.state.page)
+  }
+
+  callApi(page) {
+    fetch('https://swapi.dev/api/people/?page=' + page)
     .then(response => response.json())
-    .then(data => this.setState({repos: data}))
+    .then(data => {
+      this.setState( state => ({people: [...state.people, ...data.results]}))
+    })
+    .then(data => {this.setState( state => ({page: state.page + 1}))})
+    .then(data => {console.log(this.state.page)})
+  }
+
+  handleChange(e) {
+    this.setState({search: e.target.value});
   }
 
   render() {
-    const repoNames = this.state.repos.map(repo => <li>{repo.name}</li>)
+    const filtered = this.state.people.filter( e => e.name.toLowerCase().includes(this.state.search.toLowerCase()) )
+    const repoNames = filtered.map(person => <li>{person.name}</li>)
     return (
       <div className="App">
         <header className="App-header">
+          <h1>List</h1>
+          <label>
+            <input type="text" aria-label="Search" value={this.state.value} onChange={this.handleChange} />
+          </label>
           <ul>
             {repoNames}
           </ul>
+          <button onClick={this.handleClick}>Load More</button>
         </header>
       </div>
     );
