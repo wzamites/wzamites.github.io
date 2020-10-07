@@ -23,6 +23,10 @@ export default class App extends React.Component {
     this.callApi(this.state.page)
   }
 
+  handleChange(e) {
+    this.setState({search: e.target.value});
+  }
+
   callApi(page) {
     fetch('https://swapi.dev/api/people/?page=' + page)
     .then(response => response.json())
@@ -31,10 +35,6 @@ export default class App extends React.Component {
     })
     .then(data => {this.setState( state => ({page: state.page + 1}))})
     .then(data => {console.log(this.state.page)})
-  }
-
-  handleChange(e) {
-    this.setState({search: e.target.value});
   }
 
   render() {
