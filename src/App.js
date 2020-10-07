@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +27,7 @@ class App extends React.Component {
     fetch('https://swapi.dev/api/people/?page=' + page)
     .then(response => response.json())
     .then(data => {
-      this.setState( state => ({people: [...state.people, ...data.results]}))
+      this.setState( state => ({people: [...state.people, ...data.results]}) )
     })
     .then(data => {this.setState( state => ({page: state.page + 1}))})
     .then(data => {console.log(this.state.page)})
@@ -56,5 +56,3 @@ class App extends React.Component {
     );
   }
 }
-
-export default App;
